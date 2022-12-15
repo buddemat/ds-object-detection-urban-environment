@@ -35,7 +35,8 @@ ds-object-detection-urban-environment
 ├── edit_config.py                    # Script to update experiment config.
 ├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
 ├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
-├── init_udacity_workspace.sh         # Short bash script to update Udacity workspace.
+├── train_reference_model.sh          # Bash script to train reference model.
+├── update_udacity_workspace.sh       # Bash script to update Udacity workspace.
 ├── utils.py                          # Helper functions.
 └── README.md                         # This file.
 ```
@@ -115,9 +116,9 @@ This should launch a browser containing your notebooks. If the browser doesn't l
   Subsequently, the training can be started:
 
   ```
-  $ python experiments/model_main_tf2.py --model_dir=experiments/reference/ --pipeline_config_path=experiments/reference/pipeline_new.config
+  $ ./train_reference_model.sh
   ```
-  To monitor the training of the reference model, a tensorboard instance can be launched:
+  This will write the output of the script to `train_reference_model.log`. To monitor the training of the reference model graphically, a tensorboard instance can be launched:
 
   ```
   python -m tensorboard.main --logdir experiments/reference/

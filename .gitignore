@@ -3,3 +3,5 @@
 
 *__pycache__
 *.ipynb_checkpoints/
+
+train_reference_model.log
