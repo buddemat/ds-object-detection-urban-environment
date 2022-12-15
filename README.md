@@ -19,8 +19,13 @@ The repository is structured as follows:
 ```bash
 ds-object-detection-urban-environment
 ├── .gitignore                        # Gitignore file. 
+├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
+├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
+├── utils.py                          # Helper functions.
 └── README.md                         # This file.
 ```
+
+The contents of this repository have been built on the template files in the [Udacity Computer Vision Starter GitHub repository](https://github.com/udacity/nd013-c1-vision-starter).
 
 ## Usage
 
