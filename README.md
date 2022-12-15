@@ -3,11 +3,13 @@ This repository contains my project submission to the Object Detection in the Ur
 
 ## Project Summary
 
-TODO
+This project explores detecting objects in an urban environment annotating cyclists, pedestrians and vehicles, based on the Waymo dataset and the TensorFlow Object Detection API.
+
+Detecting such objects accurately and without error is a crucial task in self-driving car scenarios, since seeing and placing them correctly is the basis for taking correct controlling decisions. 
 
 The code is basically structured into the following parts:
 
-1. TODO
+1. An exploratory data analysis is done in the notebook `Exploratory Data Analysis.ipynb`.
 
 1. TODO
 
