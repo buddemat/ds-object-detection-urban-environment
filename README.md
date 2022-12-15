@@ -21,9 +21,10 @@ The repository is structured as follows:
 ```bash
 ds-object-detection-urban-environment
 ├── .gitignore                        # Gitignore file. 
+├── download_pretrained_model.sh      # Bash script to dowload and unpack pre-trained model.
 ├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
 ├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
-├── init_udacity_workspace.sh         # Short shell script to update workspace.
+├── init_udacity_workspace.sh         # Short bash script to update workspace.
 ├── utils.py                          # Helper functions.
 └── README.md                         # This file.
 ```
