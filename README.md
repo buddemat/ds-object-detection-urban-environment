@@ -23,6 +23,7 @@ ds-object-detection-urban-environment
 ├── .gitignore                        # Gitignore file. 
 ├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
 ├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
+├── init_udacity_workspace.sh         # Short shell script to update workspace.
 ├── utils.py                          # Helper functions.
 └── README.md                         # This file.
 ```
