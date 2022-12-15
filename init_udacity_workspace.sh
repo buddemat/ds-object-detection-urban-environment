@@ -3,6 +3,7 @@
 # update firefox to prevent crashes
 sudo apt-get update
 sudo apt-get install --only-upgrade firefox
+sudo apt-get install tree
 
 # configure git repo locally
 git config user.name "Matthias Budde"
