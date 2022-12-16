@@ -109,24 +109,24 @@ This should launch a browser containing your notebooks. If the browser doesn't l
 
 1. Creating and running the reference model
 
-  First, the pre-trained SSD Resnet 50 640x640 model needs to be downloaded and the configuration edited. To facilitate this for the reference model, the according steps have been grouped into a bash script:
+    First, the pre-trained SSD Resnet 50 640x640 model needs to be downloaded and the configuration edited. To facilitate this for the reference model, the according steps have been grouped into a bash script:
 
-  ```
-  $ ./download_pretrained_model.sh
-  ```
+    ```
+    $ ./download_pretrained_model.sh
+    ```
 
-  Subsequently, the training can be started:
+    Subsequently, the training can be started:
 
-  ```
-  $ ./train_reference_model.sh
-  ```
-  This will write the output of the script to `train_reference_model.log`. To monitor the training of the reference model graphically, a tensorboard instance can be launched:
+    ```
+    $ ./train_reference_model.sh
+    ```
+    This will write the output of the script to `train_reference_model.log`. To monitor the training of the reference model graphically, a tensorboard instance can be launched:
 
-  ```
-  python -m tensorboard.main --logdir experiments/reference/
-  ```
+    ```
+    python -m tensorboard.main --logdir experiments/reference/
+    ```
 
-  The findings of the monitoring of the reference model training can be found [in the discussion below](#reference-experiment).
+    The findings of the monitoring of the reference model training can be found [in the discussion below](#reference-experiment).
 
 #### 
 
