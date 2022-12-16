@@ -155,7 +155,12 @@ This is also reflected when looking at the absolute number of objects in the sam
 
 ## Training
 ### Reference experiment
-TODO This section should detail the results of the reference experiment. It should includes training metrics and a detailed explanation of the algorithm's performances.
+When looking at the results of the reference experiment, it becomes clear that the algorithm's performance is very poor:
+
+![png](visualizations/tensorboard_reference_training.png)
+
+
+The reference model does not seem to have converged with the number of epochs. The classification loss fluctuates strongly and goes up and down. 
 
 ### Improve on the reference
 TODO This section should highlight the different strategies you adopted to improve your model. It should contain relevant figures and details of your findings.
