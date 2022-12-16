@@ -109,7 +109,7 @@ This should launch a browser containing your notebooks. If the browser doesn't l
 
 1. Creating and running the reference model
 
-  First, the pretrained SSD Resnet 50 640x640 model needs to be downloaded and the configuration edited. To facilitate this for the reference model, the according steps have been grouped into a bash script:
+  First, the pre-trained SSD Resnet 50 640x640 model needs to be downloaded and the configuration edited. To facilitate this for the reference model, the according steps have been grouped into a bash script:
 
   ```
   $ ./download_pretrained_model.sh
@@ -134,7 +134,7 @@ TODO
 
 ## Dataset
 ### Dataset analysis
-The dataset features point-of-view images from cars. The images are accompanied by ground truth data which contains bounding boxes for three classes of objects (cars, pedestrians, and cyclists). The following example image shows a highway traffic situation. The cars are highlighted by red boudning boxes:
+The dataset features point-of-view images from cars. The images are accompanied by ground truth data which contains bounding boxes for three classes of objects (cars, pedestrians, and cyclists). The following example image shows a highway traffic situation. The cars are highlighted by red bounding boxes:
 
 ![png](visualizations/sample_highway.png)
 
