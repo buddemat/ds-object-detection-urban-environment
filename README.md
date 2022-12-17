@@ -60,12 +60,20 @@ The contents of this repository have been partially built on the template files 
 ### Prerequisites
 This project is ready to be executed in the Udacity classroom workspace environment, which has the readily split Waymo data already downloaded and stored in subfolders under `/home/workspace/data`. To download and split the data yourself, please refer to the according steps in the [Computer Vision Starter github project](https://github.com/udacity/nd013-c1-vision-starter).
 
-The Udacity classroom workspace uses Python 3.6.3 and uses the following packages:
+The Udacity classroom workspace uses Python 3.7.3 and uses the following packages:
 
-TODO
+```
+absl_py==0.10.0
+matplotlib==3.4.1
+numpy==1.18.5
+object_detection==0.1
+protobuf==4.21.12
+tensorflow==2.4.1
+waymo_open_dataset==1.0.1
+waymo_open_dataset_tf_2_3_0==1.3.0
+```
 
-
-The following command will install these packages according to the configuration file `requirements.txt`. The file was generated using `pip3 freeze`.
+The following command will install these packages and their dependencies according to the configuration file `requirements.txt`. The file was generated using a combination of `pipreqs` and `pip-compile` from `piptools`.
 
 ```
 $ pip install -r requirements.txt
@@ -153,6 +161,18 @@ This should launch a browser containing your notebooks. If the browser doesn't l
     python experiments/model_main_tf2.py --model_dir=experiments/<experiment-folder>/ --pipeline_config_path=experiments/<experiment-folder>/pipeline_new.config
     ```
      substituting `<experiment-folder>` with the appropriate paths.
+ 
+    :warning: **Important note:** The disc space in the Udacity classroom environment is severely limited and it is likely that it will not accommodate the full training data before filling up! Should this be the case, you can prolongue this by deleting all checkpoint files **prior to the last** while the **training is still ongoing**. 
+
+    Example: if the most recent checkpoint were 27, you can delete the previous one (and the ones before) without affecting the training. 
+
+    ```
+    $ cd /home/workspace/experiments/experiment-2 
+    $ rm ckpt-26.data-00000-of-00001
+    $ rm ckpt-26.index
+    ```
+
+    :warning: **Important note:** However, for large models such as the one trained in experiment 2, **the available space may still not suffice**! To remedy this, either train the models outside of the Udacity classroom workspace or move it to another partition. The `/home/backup` path e.g. has much more space available. Be advised though that (ironically) this is **not backed** up, so if your session disconnects, the **progress will be lost**!
 
 1. Model evaluation
 
@@ -264,7 +284,55 @@ In the second experiment, the number of epochs was further increased to 25,000. 
 | Learning rate     | Cosine decay (base: 0.01, warmup rate: 0.004, warmup steps: 200) | 
  
 ##### Data augmentations
-Samples of the augmentations that were applied here can be seen below. In addition to the random horizontal flip and crop, random modifications of [brightness](https://www.tensorflow.org/api_docs/python/tf/image/random_brightness), [saturation](https://www.tensorflow.org/api_docs/python/tf/image/random_saturation), [hue](https://www.tensorflow.org/api_docs/python/tf/image/random_hue) and [contrast](https://www.tensorflow.org/api_docs/python/tf/image/random_contrast) were introduced and 10% of the images were randomly [converted to grayscale](https://www.tensorflow.org/api_docs/python/tf/image/rgb_to_grayscale). The following images were generated using the code in `Explore augmentations.ipynb`:
+Samples of the augmentations that were applied here can be seen below. In addition to the random horizontal flip and crop, random modifications of [brightness](https://www.tensorflow.org/api_docs/python/tf/image/random_brightness), [saturation](https://www.tensorflow.org/api_docs/python/tf/image/random_saturation), [hue](https://www.tensorflow.org/api_docs/python/tf/image/random_hue) and [contrast](https://www.tensorflow.org/api_docs/python/tf/image/random_contrast) were introduced and 10% of the images were randomly [converted to grayscale](https://www.tensorflow.org/api_docs/python/tf/image/rgb_to_grayscale):
+
+```
+data_augmentation_options {
+  random_horizontal_flip {
+  }
+}
+data_augmentation_options {
+  random_crop_image {
+    min_object_covered: 0.0
+    min_aspect_ratio: 0.75
+    max_aspect_ratio: 3.0
+    min_area: 0.75
+    max_area: 1.0
+    overlap_thresh: 0.0
+  }
+}
+data_augmentation_options {
+  random_adjust_brightness {
+    max_delta: 0.2
+  }
+}
+data_augmentation_options {
+  random_adjust_contrast {
+    min_delta: 0.8
+    max_delta: 1.25
+  }
+}
+data_augmentation_options {
+  random_adjust_hue {
+    max_delta: 0.02
+  }
+}
+data_augmentation_options {
+  random_adjust_saturation {
+    min_delta: 0.8
+    max_delta: 1.25
+  }
+}
+data_augmentation_options {
+  random_rgb_to_gray {
+    probability: 0.1
+  }
+}
+```
+
+These augmentations were chosen to alleviate the diversity of lighting and environmental conditions in the training data and better represent more seldom conditions in the data.
+
+The following images were generated using the code in `Explore augmentations.ipynb`:
 
 
 ![png](visualizations/sample_augmentation_1.png)
@@ -278,5 +346,7 @@ Samples of the augmentations that were applied here can be seen below. In additi
 ##### Final model performance
 
 With these modifications TODO
+
+![png](visualizations/tensorboard_experiment-2_training_ignore_outliers.png)
 
 ##### Animation of final model performance
