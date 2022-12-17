@@ -239,13 +239,12 @@ The reference model was trained according to the example instructions above, whi
 | Augmentations     | Random horizontal flip <br/> Random crop image |
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.04, warmup rate: 0.013333, warmup steps: 200) | 
-
   
-When looking at the results of the reference experiment, it becomes clear that the algorithm's performance is very poor:
+When looking at the results of the reference training experiment, it becomes clear that the algorithm's performance is very poor:
 
 ![png](visualizations/tensorboard_reference_training_ignore_outliers.png)
 
-The classification loss fluctuates strongly and goes up and down. The total loss does not drop below ~20. The reference model does not seem to have converged with the number of epochs. An increase of the number of steps seems to be a first sensible direction to explore.
+The classification loss fluctuates strongly and goes up and down, but plateaus at a high level. The total loss does not drop below ~20. The reference model does not seem to have converged with the number of epochs. Therefore, an increase of the number of steps seems to be a first sensible direction to explore.
 
 ### Improve on the reference
 This section details the different attempts made to improve the model. 
@@ -263,12 +262,16 @@ In the first experiment, the only change to the reference model was to increase 
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.04, warmup rate: 0.013333, warmup steps: 200) | 
   
-When looking at the results of this experiment, it becomes clear that the model still does not seem to have converged.
+When looking at the results of this experiment, it becomes clear that the model still does not seem to have converged. As a result, further increase of the number of epochs is warranted.
+
+Additionally, we can observe a jump in the loss after approximately 2.5k steps and a subsequent decline plateauing on a higher level. While it is not completely evident what caused this, one explanation may be that due to a too large learning rate, the training jumped out and got stuck in a local minimum. We will therefore investigate a lower initial learning rate.
 
 ![png](visualizations/tensorboard_experiment-1_training_ignore_outliers.png)
 
-As a result, further increase of the number of epochs is warranted.
+Finally, the performance of the model is poor. The mean average precision rests at 0, mean average recall for large and medium objects with 100 detections (`AR@100`) is around 0.1, for small objects it is close to 0.
 
+![png](visualizations/tensorboard_experiment-1_eval_precision.png)
+![png](visualizations/tensorboard_experiment-1_eval_recall.png)
 
 #### Experiment-2
 
