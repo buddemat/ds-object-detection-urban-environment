@@ -259,12 +259,12 @@ In the second experiment, the number of epochs was further increased to 25,000. 
 | Pre-trained model | SD Resnet 50 640x640                           |
 | Batch size        | 4                                              |
 | Training steps    | 25,000                                         | 
-| Augmentations     | Random horizontal flip <br/> Random crop image <br/>Random adjust brightness <br/> Random adjust contrast <br/> Random adjust hue <br/> Random adjust saturation <br/> Random rgb to gray <br/> |
+| Augmentations     | Random horizontal flip <br/> Random crop image <br/> [Random adjust brightness](https://www.tensorflow.org/api_docs/python/tf/image/random_brightness) <br/> [Random adjust contrast](https://www.tensorflow.org/api_docs/python/tf/image/random_contrast) <br/> [Random adjust hue](https://www.tensorflow.org/api_docs/python/tf/image/random_hue) <br/> [Random adjust saturation](https://www.tensorflow.org/api_docs/python/tf/image/random_saturation) <br/> [Random rgb to gray](https://www.tensorflow.org/api_docs/python/tf/image/rgb_to_grayscale) <br/> |
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.01, warmup rate: 0.004, warmup steps: 200) | 
  
 ##### Data augmentations
-Samples of the augmentations that were applied here can be seen below. Random modifications of brightness, saturation, hue and contrast were carried out and 10% of the images were randomly converted to grayscale. The following images were generated using the code in `Explore augmentations.ipynb`:
+Samples of the augmentations that were applied here can be seen below. In addition to the random horizontal flip and crop, random modifications of [brightness](https://www.tensorflow.org/api_docs/python/tf/image/random_brightness), [saturation](https://www.tensorflow.org/api_docs/python/tf/image/random_saturation), [hue](https://www.tensorflow.org/api_docs/python/tf/image/random_hue) and [contrast](https://www.tensorflow.org/api_docs/python/tf/image/random_contrast) were introduced and 10% of the images were randomly [converted to grayscale](https://www.tensorflow.org/api_docs/python/tf/image/rgb_to_grayscale). The following images were generated using the code in `Explore augmentations.ipynb`:
 
 
 ![png](visualizations/sample_augmentation_1.png)
