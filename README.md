@@ -46,6 +46,7 @@ ds-object-detection-urban-environment
 ├── edit_config.py                    # Script to update experiment config.
 ├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
 ├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
+├── requirements.txt                  # List of imported Python packages.
 ├── train_reference_model.sh          # Bash script to train reference model.
 ├── update_udacity_workspace.sh       # Bash script to update Udacity workspace.
 ├── utils.py                          # Helper functions.
@@ -62,6 +63,13 @@ This project is ready to be executed in the Udacity classroom workspace environm
 The Udacity classroom workspace uses Python 3.6.3 and uses the following packages:
 
 TODO
+
+
+The following command will install these packages according to the configuration file `requirements.txt`. The file was generated using `pip3 freeze`.
+
+```
+$ pip install -r requirements.txt
+```
 
 In the classroom workspace, every library and package should already be installed in your environment, so installing the requirements should not be necessary.
 
