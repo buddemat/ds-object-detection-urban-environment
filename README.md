@@ -13,7 +13,9 @@ The code is basically structured into the following parts:
 
 1. Models have been trained using a set of config files, and bash and python scripts. 
 
-1. TODO
+1. An exploratory augmentation notebook visualizes the configured augmentations.
+
+1. TODO animation
 
 This repository has both the necessary code to reproduce these steps in the Udacity classroom workspace, as well as [a detailed discussion of their previous execution at the end of this file](#dataset).
 
@@ -26,10 +28,17 @@ ds-object-detection-urban-environment
 │   ├── exporter_main_v2.py           # Script to create an inference model.
 │   ├── label_map.pbtxt
 │   ├── model_main_tf2.py             # Script to to launch training.
+│   ├── experiment-1
+│   │   ├── .gitignore                # Local gitignore file.
+│   │   └── pipeline_new.config       # Experiment configuration.
+│   ├── experiment-2
+│   │   ├── .gitignore                # Local gitignore file.
+│   │   └── pipeline_new.config       # Experiment configuration.
 │   ├── pretrained_model              
 │   │   └── .gitignore                # Local gitignore file.
 │   └── reference                     # Target directory for trained reference model.
-│       └── .gitignore                # Local gitignore file.
+│       ├── .gitignore                # Local gitignore file.
+│       └── pipeline_new.config       # Experiment configuration.
 ├── visualizations
 │   └── ...                           # Charts, images, etc. 
 ├── .gitignore                        # Gitignore file. 
@@ -128,6 +137,8 @@ This should launch a browser containing your notebooks. If the browser doesn't l
 
     The findings of the monitoring of the reference model training can be found [in the discussion below](#reference-experiment).
 
+TODO Evaluation
+
 #### 
 
 TODO
@@ -155,12 +166,69 @@ This is also reflected when looking at the absolute number of objects in the sam
 
 ## Training
 ### Reference experiment
+The reference model was trained according to the example instructions above, which initiate the model with the following parameters:
+
+| Parameter         | Setting                                        |
+|-------------------|------------------------------------------------|
+| Pre-trained model | SD Resnet 50 640x640                           |
+| Batch size        | 2                                              |
+| Training steps    | 2,500                                          | 
+| Augmentations     | Random horizontal flip <br/> Random crop image |
+| Optimizer         | Momentum optimizer (value 0.9)                 |
+| Learning rate     | Cosine decay (base: 0.04, warmup rate: 0.013333, warmup steps: 200) | 
+
+  
 When looking at the results of the reference experiment, it becomes clear that the algorithm's performance is very poor:
 
-![png](visualizations/tensorboard_reference_training.png)
+![png](visualizations/tensorboard_reference_training_ignore_outliers.png)
 
-
-The reference model does not seem to have converged with the number of epochs. The classification loss fluctuates strongly and goes up and down. 
+The reference model does not seem to have converged with the number of epochs. The classification loss fluctuates strongly and goes up and down. An increase of the number of steps seems to be a first sensible direction to explore.
 
 ### Improve on the reference
-TODO This section should highlight the different strategies you adopted to improve your model. It should contain relevant figures and details of your findings.
+This section details the different attempts made to improve the model. 
+
+#### Experiment-1
+
+In the first experiment, the only change to the reference model was to increase the number of training steps to 10,000, resulting in the following parameters:
+
+| Parameter         | Setting                                        |
+|-------------------|------------------------------------------------|
+| Pre-trained model | SD Resnet 50 640x640                           |
+| Batch size        | 2                                              |
+| Training steps    | 10,000                                         | 
+| Augmentations     | Random horizontal flip <br/> Random crop image |
+| Optimizer         | Momentum optimizer (value 0.9)                 |
+| Learning rate     | Cosine decay (base: 0.04, warmup rate: 0.013333, warmup steps: 200) | 
+  
+When looking at the results of this experiment, it becomes clear that the model still does not seem to have converged.
+
+![png](visualizations/tensorboard_experiment-1_training_ignore_outliers.png)
+
+As a result, further increase of the number of epochs is warranted.
+
+
+#### Experiment-2
+
+In the second experiment, the number of epochs was further increased to 25,000. At the same time, the batch size was increased to 4, and additional augmentations were introduced according to the tests in `Explore augmentations.ipynb`. The learning rate was also adjusted to a lower setting:
+
+| Parameter         | Setting                                        |
+|-------------------|------------------------------------------------|
+| Pre-trained model | SD Resnet 50 640x640                           |
+| Batch size        | 4                                              |
+| Training steps    | 25,000                                         | 
+| Augmentations     | Random horizontal flip <br/> Random crop image <br/>Random adjust brightness <br/> Random adjust contrast <br/> Random adjust hue <br/> Random adjust saturation <br/> Random rgb to gray <br/> |
+| Optimizer         | Momentum optimizer (value 0.9)                 |
+| Learning rate     | Cosine decay (base: 0.01, warmup rate: 0.004, warmup steps: 200) | 
+  
+Samples of the augmentations that were applied here can be seen below. Random modifications of brightness, saturation, hue and contrast were carried out and 10% of the images were randomly converted to grayscale. The following images were generated using the code in `Explore augmentations.ipynb`:
+
+
+![png](visualizations/sample_augmentation_1.png)
+![png](visualizations/sample_augmentation_5.png)
+![png](visualizations/sample_augmentation_7.png)
+![png](visualizations/sample_augmentation_4.png)
+![png](visualizations/sample_augmentation_3.png)
+![png](visualizations/sample_augmentation_6.png)
+![png](visualizations/sample_augmentation_2.png)
+
+With these modifications TODO
