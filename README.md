@@ -129,7 +129,7 @@ This should launch a browser containing your notebooks. If the browser doesn't l
     ```
     $ ./train_reference_model.sh
     ```
-    This will write the output of the script to `train_reference_model.log`. To monitor the training of the reference model graphically, a tensorboard instance can be launched:
+    This will write the output of the script to `train_reference_model.log`. To monitor the training and/or evaluation of the reference model graphically, a tensorboard instance can be launched:
 
     ```
     python -m tensorboard.main --logdir experiments/reference/
@@ -137,11 +137,46 @@ This should launch a browser containing your notebooks. If the browser doesn't l
 
     The findings of the monitoring of the reference model training can be found [in the discussion below](#reference-experiment).
 
-TODO Evaluation
+1. Training other models
 
-#### 
+    Generally, to start the training for any of the experiments, execute
 
-TODO
+    ```
+    python experiments/model_main_tf2.py --model_dir=experiments/<experiment-folder>/ --pipeline_config_path=experiments/<experiment-folder>/pipeline_new.config
+    ```
+     substituting `<experiment-folder>` with the appropriate paths.
+
+1. Model evaluation
+
+    Once the training is finished, launch the evaluation process:
+    ```
+    python experiments/model_main_tf2.py --model_dir=experiments/<experiment-folder>/ --pipeline_config_path=experiments/<experiment-folder>/pipeline_new.config --checkpoint_dir=experiments/<experiment-folder>/
+    ```
+     again substituting `<experiment-folder>` with the appropriate paths.
+
+    
+    :warning: Both training and evaluation may display some Tensorflow warnings, which can be ignored. You may have to kill the evaluation script manually using
+    <kbd>CTRL</kbd>+<kbd>C</kbd>.
+    
+    To monitor the training, you can launch a tensorboard instance by running `python -m tensorboard.main --logdir experiments/<experiment-folder>/`. 
+
+#### Exporting and creating animations
+
+1. Export the final model
+
+    In case you have added experiments beyond the ones configured in the repository, modify the arguments of the following function to adjust it to your final model:
+    
+    ```
+    python experiments/exporter_main_v2.py --input_type image_tensor --pipeline_config_path experiments/experiment-2/pipeline_new.config --trained_checkpoint_dir experiments/experiment-2/ --output_directory experiments/experiment-2/exported/
+    ```
+    This should create a new folder `experiments/experiment-2/exported/saved_model`. You can read more about the Tensorflow SavedModel format [here](https://www.tensorflow.org/guide/saved_model).
+    
+1. Creating an animation
+    Finally, you can create a video of the final model's inferences for any tf record file. To do so, run the following command (if necessary, adjust file paths):
+    ```
+    python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment-2/exported/saved_model --tf_record_path /data/waymo/testing/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment-2/pipeline_new.config --output_path animation.gif
+    ```
+    The animation generated based on the final model is displayes [at the end of the discussion below](#animation-of-final-model-performance).
 
 ## Dataset
 ### Dataset analysis
@@ -182,7 +217,7 @@ When looking at the results of the reference experiment, it becomes clear that t
 
 ![png](visualizations/tensorboard_reference_training_ignore_outliers.png)
 
-The reference model does not seem to have converged with the number of epochs. The classification loss fluctuates strongly and goes up and down. An increase of the number of steps seems to be a first sensible direction to explore.
+The classification loss fluctuates strongly and goes up and down. The total loss does not drop below ~20. The reference model does not seem to have converged with the number of epochs. An increase of the number of steps seems to be a first sensible direction to explore.
 
 ### Improve on the reference
 This section details the different attempts made to improve the model. 
@@ -219,7 +254,8 @@ In the second experiment, the number of epochs was further increased to 25,000. 
 | Augmentations     | Random horizontal flip <br/> Random crop image <br/>Random adjust brightness <br/> Random adjust contrast <br/> Random adjust hue <br/> Random adjust saturation <br/> Random rgb to gray <br/> |
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.01, warmup rate: 0.004, warmup steps: 200) | 
-  
+ 
+##### Data augmentations
 Samples of the augmentations that were applied here can be seen below. Random modifications of brightness, saturation, hue and contrast were carried out and 10% of the images were randomly converted to grayscale. The following images were generated using the code in `Explore augmentations.ipynb`:
 
 
@@ -231,4 +267,8 @@ Samples of the augmentations that were applied here can be seen below. Random mo
 ![png](visualizations/sample_augmentation_6.png)
 ![png](visualizations/sample_augmentation_2.png)
 
+##### Final model performance
+
 With these modifications TODO
+
+##### Animation of final model performance
