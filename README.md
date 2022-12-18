@@ -11,11 +11,11 @@ The code is basically structured into the following parts:
 
 1. An exploratory data analysis has been done using the notebook `Exploratory Data Analysis.ipynb`. See [discussion below](#dataset-analysis) for the results.
 
-1. Models have been trained using a set of config files, and bash and python scripts. 
+1. Models can be trained using a set of config files, and bash and python scripts. 
 
 1. An exploratory augmentation notebook visualizes the configured augmentations.
 
-1. TODO animation
+1. Models can be exported and animations can be rendered using these stored models.
 
 This repository has both the necessary code to reproduce these steps in the Udacity classroom workspace, as well as [a detailed discussion of their previous execution at the end of this file](#dataset).
 
@@ -60,7 +60,7 @@ The contents of this repository have been partially built on the template files 
 ### Prerequisites
 This project is ready to be executed in the Udacity classroom workspace environment, which has the readily split Waymo data already downloaded and stored in subfolders under `/home/workspace/data`. To download and split the data yourself, please refer to the according steps in the [Computer Vision Starter github project](https://github.com/udacity/nd013-c1-vision-starter).
 
-The Udacity classroom workspace uses Python 3.7.3 and uses the following packages:
+The Udacity classroom workspace uses Python 3.7.3 and uses the following packages (list generated with `pipreqs`):
 
 ```
 absl_py==0.10.0
@@ -202,9 +202,9 @@ This should launch a browser containing your notebooks. If the browser doesn't l
 1. Creating an animation
     Finally, you can create a video of the final model's inferences for any tf record file. To do so, run the following command (if necessary, adjust file paths):
     ```
-    python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment-2/exported/saved_model --tf_record_path /data/waymo/testing/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment-2/pipeline_new.config --output_path animation.gif
+    python inference_video.py --labelmap_path label_map.pbtxt --model_path experiments/experiment-2/exported/saved_model --tf_record_path /data/test/segment-12200383401366682847_2552_140_2572_140_with_camera_labels.tfrecord --config_path experiments/experiment-2/pipeline_new.config --output_path animation.gif
     ```
-    The animation generated based on the final model is displayes [at the end of the discussion below](#animation-of-final-model-performance).
+    The animation generated based on the final model is displayed [at the end of the discussion below](#animation-of-final-model-performance).
 
 ## Dataset
 ### Dataset analysis
@@ -262,9 +262,9 @@ In the first experiment, the only change to the reference model was to increase 
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.04, warmup rate: 0.013333, warmup steps: 200) | 
   
-When looking at the results of this experiment, it becomes clear that the model still does not seem to have converged. As a result, further increase of the number of epochs is warranted.
+When looking at the results of this experiment, it becomes clear that the model still does not seem to have converged. As a result, further increase of the number of epochs is warranted. Training and evaluation loss are on par, indicating that overfitting is not an issue here.
 
-Additionally, we can observe a jump in the loss after approximately 2.5k steps and a subsequent decline plateauing on a higher level. While it is not completely evident what caused this, one explanation may be that due to a too large learning rate, the training jumped out and got stuck in a local minimum. We will therefore investigate a lower initial learning rate.
+Additionally, we can observe a jump in the loss after approximately 500 steps and again at ca. 2.5k steps and a subsequent decline plateauing on a higher level. While it is not completely evident what caused this, one explanation may be that due to a too large learning rate, the training jumped out and got stuck in a local minimum. We will therefore investigate a lower initial learning rate.
 
 ![png](visualizations/tensorboard_experiment-1_training_ignore_outliers.png)
 
@@ -273,15 +273,15 @@ Finally, the performance of the model is poor. The mean average precision rests 
 ![png](visualizations/tensorboard_experiment-1_eval_precision.png)
 ![png](visualizations/tensorboard_experiment-1_eval_recall.png)
 
-#### Experiment-2
+#### Experiment-2 and experiment-3
 
-In the second experiment, the number of epochs was further increased to 25,000. At the same time, the batch size was increased to 4, and additional augmentations were introduced according to the tests in `Explore augmentations.ipynb`. The learning rate was also adjusted to a lower setting:
+In the second and third experiment, the number of epochs was further increased. Experiment 2 was evaluated after ~15,000, experiment 3 after 25,000 epochs. All other modifications were identical in both runs: The batch size was increased to 4, and additional augmentations were introduced according to the tests in `Explore augmentations.ipynb`. The learning rate was also adjusted to a lower setting:
 
 | Parameter         | Setting                                        |
 |-------------------|------------------------------------------------|
 | Pre-trained model | SD Resnet 50 640x640                           |
 | Batch size        | 4                                              |
-| Training steps    | 25,000                                         | 
+| Training steps    | 15,000 (experiment-2) resp. 25,000 (experiment-3) | 
 | Augmentations     | Random horizontal flip <br/> Random crop image <br/> [Random adjust brightness](https://www.tensorflow.org/api_docs/python/tf/image/random_brightness) <br/> [Random adjust contrast](https://www.tensorflow.org/api_docs/python/tf/image/random_contrast) <br/> [Random adjust hue](https://www.tensorflow.org/api_docs/python/tf/image/random_hue) <br/> [Random adjust saturation](https://www.tensorflow.org/api_docs/python/tf/image/random_saturation) <br/> [Random rgb to gray](https://www.tensorflow.org/api_docs/python/tf/image/rgb_to_grayscale) <br/> |
 | Optimizer         | Momentum optimizer (value 0.9)                 |
 | Learning rate     | Cosine decay (base: 0.01, warmup rate: 0.004, warmup steps: 200) | 
@@ -346,10 +346,42 @@ The following images were generated using the code in `Explore augmentations.ipy
 ![png](visualizations/sample_augmentation_6.png)
 ![png](visualizations/sample_augmentation_2.png)
 
-##### Final model performance
+##### Model performance
 
-With these modifications TODO
+With these modifications, the performance of the model significantly increased.
+
+After ~15,000 epochs, there was already a clear improvement visible.
 
 ![png](visualizations/tensorboard_experiment-2_training_ignore_outliers.png)
 
-##### Animation of final model performance
+There is some discrepancy between the training and validation losses though. This may either indicate a bit of overfitting, a generally not too well balanced split between training and validation, or (since we only did 1 evaluation epoch).
+
+![png](visualizations/tensorboard_experiment-2_eval_precision.png)
+
+The overall mean average precision (mAP) has risen from practically zero in the first experiment to 0.14. This, however, is strongly different for the different size classes of objects: the best value is exhibited for large objects (~0.58), medium objects are detected slightly worse (~0.48), and small objects detection is much worse (0.07). 
+
+![png](visualizations/tensorboard_experiment-2_eval_recall.png)
+
+This tendency is the same for recall: Average recall (`AR@100`) is best for large objects (0.66) and a little worse for medium ones (0.54). Small object AR is comparatively small, with a value of 0.14.
+
+##### Further improvements
+
+An idea to improve the model further, especially towards detecting small objects more accurately, is employing the `random_crop_pad_image` augmentation:
+
+```
+  data_augmentation_options {
+    random_crop_pad_image {
+    }
+  }
+```
+
+The augmentation results are shown below:
+
+![png](visualizations/sample_augmentation_8.png)
+![png](visualizations/sample_augmentation_9.png)
+![png](visualizations/sample_augmentation_10.png)
+![png](visualizations/sample_augmentation_11.png)
+
+Unfortunately, due to stability issues with the classroom environment, I could not test this approach successfully with the allotted GPU hours.
+
+The configuration to do this is saved as `experiment-4` though within this repository.
