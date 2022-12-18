@@ -29,15 +29,15 @@ ds-object-detection-urban-environment
 │   ├── label_map.pbtxt
 │   ├── model_main_tf2.py             # Script to to launch training.
 │   ├── experiment-1
-│   │   ├── .gitignore                # Local gitignore file.
 │   │   └── pipeline_new.config       # Experiment configuration.
 │   ├── experiment-2
-│   │   ├── .gitignore                # Local gitignore file.
+│   │   └── pipeline_new.config       # Experiment configuration.
+│   ├── experiment-3
+│   │   └── pipeline_new.config       # Experiment configuration.
+│   ├── experiment-4
 │   │   └── pipeline_new.config       # Experiment configuration.
 │   ├── pretrained_model              
-│   │   └── .gitignore                # Local gitignore file.
 │   └── reference                     # Target directory for trained reference model.
-│       ├── .gitignore                # Local gitignore file.
 │       └── pipeline_new.config       # Experiment configuration.
 ├── visualizations
 │   └── ...                           # Charts, images, etc. 
@@ -46,6 +46,9 @@ ds-object-detection-urban-environment
 ├── edit_config.py                    # Script to update experiment config.
 ├── Exploratory Data Analysis.ipynb   # Notebook with exporatory data analysis.
 ├── Explore augmentations.ipynb       # Notebook with augmentations exploration.
+├── filenames.txt
+├── inference_video.py                # Python script to generate animations from model run.
+├── label_map.pbtxt                 
 ├── requirements.txt                  # List of imported Python packages.
 ├── train_reference_model.sh          # Bash script to train reference model.
 ├── update_udacity_workspace.sh       # Bash script to update Udacity workspace.
